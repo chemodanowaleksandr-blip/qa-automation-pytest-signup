@@ -52,7 +52,6 @@ class TestAuthSignup:
         # Act & Assert: Регистрация 2 (Ошибка дубликата)
         second_res = api_session.post(url, json=payload)
         
-        # Все скобки на месте, коды 400 и 409 добавлены в список
-        assert second_res.status_code in, (
-            f"Ожидался статус-код ошибки дубликата (400/409), пришел {second_res.status_code}"
-        )
+        # Изменил логику на OR, теперь тут точно ничего не срежется и выполнится корректно
+        status = second_res.status_code
+        assert status == 400 or status == 409, f"Ожидался статус 400 или 409, пришел {status}"
