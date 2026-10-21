@@ -24,6 +24,23 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run automated tests with pytest
+    - name: Run automated tests and generate reports
+      if: always()  # Запускать даже если предыдущие шаги упали
       run: |
-        pytest tests/ -v
+        # 1. Генерируем HTML-отчет
+        # 2. Генерируем Markdown-отчет для GitHub Job Summary
+        pytest tests/ -v --html=report.html --self-contained-html --md-report --md-report-flavor gfm --md-report-output summary.md
+
+    - name: Publish Markdown Summary to GitHub Actions
+      if: always()
+      run: |
+        # Отправляем сгенерированную таблицу в сводку GitHub
+        cat summary.md >> $GITHUB_STEP_SUMMARY
+
+    - name: Upload HTML Test Report as Artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pytest-html-report
+        path: report.html
+        retention-days: 7
