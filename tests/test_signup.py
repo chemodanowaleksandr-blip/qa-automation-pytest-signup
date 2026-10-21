@@ -51,6 +51,8 @@ class TestAuthSignup:
 
         # Act & Assert: Регистрация 2 (Ошибка дубликата)
         second_res = api_session.post(url, json=payload)
+        
+        # ТУТ БЫЛА ОШИБКА. Теперь список кодов на месте:
         assert second_res.status_code in, (
             f"Ожидался статус-код ошибки дубликата (400/409), пришел {second_res.status_code}"
         )
